@@ -15,12 +15,10 @@ import java.util.List;
 public class MeasurementAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private List sensorValues;
-    private Context mContext;
     private static final int COUNT_ITEMS = 2;
 
-    public MeasurementAdapter(Context context, List sensorValues) {
+    public MeasurementAdapter(List sensorValues) {
         this.sensorValues = sensorValues;
-        this.mContext = context;
     }
 
     @NonNull

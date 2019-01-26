@@ -11,7 +11,8 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.example.dimitriygeorgiev.stressit.R;
-import com.example.dimitriygeorgiev.stressit.Tcp.ConnectTask;
+import com.example.dimitriygeorgiev.stressit.Tcp.FindDeviceIp;
+import com.example.dimitriygeorgiev.stressit.Tcp.IoTCommunication;
 import com.example.dimitriygeorgiev.stressit.adapters.MeasurementAdapter;
 
 import java.util.ArrayList;
@@ -20,10 +21,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static boolean isConnected;
+    public static String currIp;
     Toolbar toolbar;
     RecyclerView recyclerView;
     List<Double> sensorValues;
-    ConnectTask task;
+    IoTCommunication task;
     MeasurementAdapter adapter;
 
     @Override
@@ -39,11 +41,12 @@ public class MainActivity extends AppCompatActivity {
         sensorValues.add(0.00);
         sensorValues.add(0.00);
 
-        adapter = new MeasurementAdapter(this, sensorValues);
+        adapter = new MeasurementAdapter(sensorValues);
         setRecyclerView(recyclerView, adapter);
 
-        task = new ConnectTask(sensorValues, adapter, this);
-        task.execute("");
+        task = new IoTCommunication(sensorValues, adapter, this);
+        FindDeviceIp getIp = new FindDeviceIp(task);
+        getIp.execute();
     }
 
     private void setRecyclerView(RecyclerView recyclerView, MeasurementAdapter adapter) {
@@ -73,8 +76,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void toReconnect() {
         if (!isConnected) {
-            new ConnectTask(sensorValues, adapter, this).execute("");
+            new IoTCommunication(sensorValues, adapter, this).execute(currIp);
         }
+        resetParameters();
+    }
+
+    private void resetParameters() {
+        sensorValues.clear();
+        sensorValues.add(0.00);
+        sensorValues.add(0.00);
+        sensorValues.add(0.00);
+        sensorValues.add(0.00);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

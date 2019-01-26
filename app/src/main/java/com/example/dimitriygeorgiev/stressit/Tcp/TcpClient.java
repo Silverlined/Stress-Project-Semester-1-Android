@@ -16,8 +16,8 @@ import java.net.UnknownHostException;
 public class TcpClient {
 
     public static final String TAG = TcpClient.class.getSimpleName();
-    public static final String SERVER_IP = "192.168.43.96"; //server IP address
     public static final int SERVER_PORT = 5045;
+    private String mServerIp; //server IP address
     private Socket socket;
     // message to send to the server
     private String mServerMessage;
@@ -34,8 +34,9 @@ public class TcpClient {
     /**
      * Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TcpClient(OnMessageReceived listener) {
+    public TcpClient(OnMessageReceived listener, String mIpAddress) {
         this.mMessageListener = listener;
+        this.mServerIp = mIpAddress;
     }
 
     /**
@@ -89,7 +90,7 @@ public class TcpClient {
 
         try {
             //here you must put your computer's IP address.
-            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            InetAddress serverAddr = InetAddress.getByName(mServerIp);
 
             Log.d("TCP Client", "C: Connecting...");
 
